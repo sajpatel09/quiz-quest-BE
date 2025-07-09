@@ -6,6 +6,7 @@ import {DatabaseModule} from "./modules/database/database.module";
 import {AuthModule} from "./modules/auth/auth.module";
 import {CategoryModule} from "./modules/category/category.module";
 import {QuizModule} from "./modules/quiz/quiz.module";
+import {QuestionModule} from "./modules/question/quiz.module";
 
 @Module({
     imports: [
@@ -13,7 +14,8 @@ import {QuizModule} from "./modules/quiz/quiz.module";
         DatabaseModule,
         AuthModule,
         CategoryModule,
-        QuizModule
+        QuizModule,
+        QuestionModule,
     ],
     controllers: [AppController],
     providers: [AppService],
