@@ -23,3 +23,13 @@ export class DeleteQuizDto {
     @IsMongoId()
     id: string;
 }
+
+export class GetAllQuizDto {
+    @IsOptional()
+    @IsString()
+    search: string;
+
+    @IsOptional()
+    @IsMongoId()
+    category: string;
+}

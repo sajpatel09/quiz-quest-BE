@@ -2,7 +2,13 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {Category} from './schemas/category.schema';
-import {CreateCategoryDto, DeleteCategoryDto, GetCategoryDto, UpdateCategoryDto} from './dto/category.dto';
+import {
+    CreateCategoryDto,
+    DeleteCategoryDto,
+    GetCategoriesDto,
+    GetCategoryDto,
+    UpdateCategoryDto
+} from './dto/category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -40,9 +46,16 @@ export class CategoryService {
         }
     }
 
-    async getAllCategories(): Promise<Category[]> {
+    async getAllCategories(query: GetCategoriesDto): Promise<Category[]> {
         try {
-            return await this.categoryModel.find().exec();
+            return await this.categoryModel.find(
+                query?.search
+                    ? {
+                        $or: [
+                            {name: {$regex: query.search, $options: 'i'}},
+                        ],
+                    } : {},
+            ).exec();
         } catch (error) {
             throw new HttpException(
                 {

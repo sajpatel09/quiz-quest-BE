@@ -1,6 +1,6 @@
-import { Controller, Post, Get, Patch, Delete, Param, Body } from '@nestjs/common';
+import {Controller, Post, Get, Patch, Delete, Param, Body, Query} from '@nestjs/common';
 import { QuizService } from './quiz.service';
-import { CreateQuizDto, UpdateQuizDto, GetQuizDto, DeleteQuizDto } from './dto/quiz.dto';
+import {CreateQuizDto, UpdateQuizDto, GetQuizDto, DeleteQuizDto, GetAllQuizDto} from './dto/quiz.dto';
 
 @Controller('quiz')
 export class QuizController {
@@ -12,8 +12,8 @@ export class QuizController {
   }
 
   @Get()
-  async findAll() {
-    return this.quizService.findAll();
+  async findAll(@Query() query: GetAllQuizDto) {
+    return this.quizService.findAll(query);
   }
 
   @Get(':id')

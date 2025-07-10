@@ -25,3 +25,9 @@ export class DeleteCategoryDto {
   @IsMongoId()
   id: string;
 }
+
+export class GetCategoriesDto {
+  @IsOptional()
+  @IsString()
+  search: string;
+}
