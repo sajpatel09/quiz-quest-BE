@@ -46,16 +46,29 @@ export class CategoryService {
         }
     }
 
-    async getAllCategories(query: GetCategoriesDto): Promise<Category[]> {
+    async getAllCategories(query: GetCategoriesDto): Promise<{ categories: Category[], total: number }> {
         try {
-            return await this.categoryModel.find(
-                query?.search
-                    ? {
-                        $or: [
-                            {name: {$regex: query.search, $options: 'i'}},
-                        ],
-                    } : {},
-            ).exec();
+            const {search, limit, page} = query;
+
+            const filter = search
+                ? {
+                    $or: [{name: {$regex: search, $options: 'i'}}],
+                }
+                : {};
+
+            let dataQuery = this.categoryModel.find(filter);
+
+            if (limit && page) {
+                const skip = (page - 1) * limit;
+                dataQuery = dataQuery.skip(skip).limit(limit);
+            }
+
+            const [categories, total] = await Promise.all([
+                dataQuery.exec(),
+                this.categoryModel.countDocuments(filter),
+            ]);
+
+            return {categories, total};
         } catch (error) {
             throw new HttpException(
                 {

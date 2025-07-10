@@ -2,7 +2,7 @@ import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common'
 import {QuestionService} from './question.service';
 import {CreateQuestionDto, DeleteQuestionDto, GetQuestionDto, UpdateQuestionDto,} from './dto/question.dto';
 
-@Controller('questions')
+@Controller('question')
 export class QuestionController {
     constructor(private readonly questionService: QuestionService) {
     }
