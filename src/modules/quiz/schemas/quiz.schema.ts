@@ -10,6 +10,12 @@ export class Quiz {
 
     @Prop({type: Types.ObjectId, ref: 'Category', required: true})
     category: Types.ObjectId;
+
+    @Prop({default: 0})
+    entryFee: number;
+
+    @Prop({default: 0})
+    prize: number;
 }
 
 export const QuizSchema = SchemaFactory.createForClass(Quiz);

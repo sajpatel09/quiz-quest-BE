@@ -1,4 +1,4 @@
-import {IsArray, IsMongoId, IsNotEmpty, IsOptional, IsString, Length, ValidateNested,} from 'class-validator';
+import {IsArray, IsInt, IsMongoId, IsNotEmpty, IsOptional, IsString, Length, ValidateNested,} from 'class-validator';
 import {Type} from 'class-transformer';
 
 class OptionDto {
@@ -37,4 +37,24 @@ export class GetQuestionDto {
 export class DeleteQuestionDto {
     @IsMongoId()
     id: string;
+}
+
+export class GetAllQuestionDto {
+    @IsOptional()
+    @IsMongoId()
+    quiz: string;
+
+    @IsOptional()
+    @IsString()
+    search: string;
+
+    @IsOptional()
+    @Type(() => Number)
+    @IsInt()
+    limit: number;
+
+    @IsOptional()
+    @Type(() => Number)
+    @IsInt()
+    page: number;
 }
