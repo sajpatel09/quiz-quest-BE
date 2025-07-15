@@ -1,12 +1,19 @@
-import {IsMongoId, IsOptional, IsString, Length} from 'class-validator';
+import {IsInt, IsMongoId, IsOptional, IsString, Length} from 'class-validator';
+import {Transform} from "class-transformer";
 
 export class CreateQuizDto {
     @IsString()
-    @Length(3, 100)
+    @Length(2, 100)
     title: string;
 
     @IsMongoId()
     category: string;
+
+    @IsInt()
+    entryFee: number;
+
+    @IsInt()
+    prize: number;
 }
 
 export class UpdateQuizDto extends CreateQuizDto {
@@ -32,4 +39,14 @@ export class GetAllQuizDto {
     @IsOptional()
     @IsMongoId()
     category: string;
+
+    @IsOptional()
+    @Transform(({value}) => isNaN(value) ? undefined : parseInt(value))
+    @IsInt()
+    limit: number;
+
+    @IsOptional()
+    @Transform(({value}) => isNaN(value) ? undefined : parseInt(value))
+    @IsInt()
+    page: number;
 }

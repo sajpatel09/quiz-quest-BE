@@ -16,25 +16,31 @@ export class QuizService {
         return createdQuiz.save();
     }
 
-    async findAll(data: GetAllQuizDto): Promise<Quiz[]> {
+    async findAll(data: GetAllQuizDto): Promise<{ quizzes: Quiz[], total: number }> {
 
-        const query = {};
+        const {search, limit, page, category} = data;
 
-        if (data.search) {
-            Object.assign(query,
-                {title: {$regex: data.search, $options: 'i'}}
-            )
+        const filter: any = {};
+        if (search) {
+            filter.$or = [{title: {$regex: search, $options: 'i'}}];
+        }
+        if (category) {
+            filter.category = category;
         }
 
-        if (data.category) {
-            Object.assign(query,
-                {
-                    category: data.category
-                }
-            )
+        let dataQuery = this.quizModel.find(filter).populate('category');
+
+        if (limit && page) {
+            const skip = (page - 1) * limit;
+            dataQuery = dataQuery.skip(skip).limit(limit);
         }
 
-        return this.quizModel.find(query).populate('category').exec();
+        const [quizzes, total] = await Promise.all([
+            dataQuery.exec(),
+            this.quizModel.countDocuments(filter),
+        ]);
+
+        return {quizzes, total};
     }
 
     async findOne({id}: GetQuizDto): Promise<Quiz> {
