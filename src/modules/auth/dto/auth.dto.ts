@@ -14,4 +14,7 @@ export class SignupDto {
 
   @IsString()
   password: string;
+
+  @IsString()
+  name: string;
 }
