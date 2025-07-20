@@ -17,7 +17,8 @@ export class AuthController {
     res.cookie('accessToken', resData.accessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "lax",
+      sameSite: "none",
+      path: "/"
     });
     return resData;
   }
@@ -31,7 +32,8 @@ export class AuthController {
     res.cookie('accessToken', resData.accessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "lax",
+      sameSite: "none",
+      path: "/"
     });
     return resData;
   }
