@@ -1,7 +1,7 @@
 import {Body, Controller, Post, Req, Res, UseGuards} from '@nestjs/common';
 import {Response} from 'express';
 import {AuthService} from './auth.service';
-import {LoginDto, SignupDto} from './dto/auth.dto';
+import {LoginDto, SignupDto, UpdateCoinDto} from './dto/auth.dto';
 import {AuthGuard} from "../../guard/auth.guard";
 
 @Controller('auth')
@@ -34,5 +34,13 @@ export class AuthController {
     async me(@Req() request: Request) {
         const user = request['user'];
         return {user};
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('update-coin')
+    async updateCoin(@Req() request: Request, @Body() body: UpdateCoinDto) {
+        const user = request['user'];
+        const updatedCoin = await this.authService.updateUserCoin(user._id, body.coin);
+        return { coin: updatedCoin };
     }
 }

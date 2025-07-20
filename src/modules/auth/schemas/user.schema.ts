@@ -16,6 +16,9 @@ export class User extends Document {
 
     @Prop({default: 'User'})
     role: string;
+
+    @Prop({ default: 200 })
+    coin: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -5,6 +5,7 @@ import {
     DeleteQuestionDto,
     GetAllQuestionDto,
     GetQuestionDto,
+    GetRandomQuestionDto,
     UpdateQuestionDto,
 } from './dto/question.dto';
 import {AdminAuthGuard} from "../../guard/admin-auth.guard";
@@ -15,17 +16,23 @@ export class QuestionController {
     }
 
     @UseGuards(AdminAuthGuard)
-    @Post()
+    @Post("/")
     async create(@Body() createQuestionDto: CreateQuestionDto) {
         return this.questionService.create(createQuestionDto);
     }
 
-    @Get()
-    async findAll(@Query() data:GetAllQuestionDto) {
+    @Get('/random')
+    async getRandomQuestions(@Query() query: GetRandomQuestionDto) {
+        console.log(query);
+        return this.questionService.getRandomQuestions(query.count);
+    }
+
+    @Get("/")
+    async findAll(@Query() data: GetAllQuestionDto) {
         return this.questionService.findAll(data);
     }
 
-    @Get(':id')
+    @Get('/:id')
     async findOne(@Param() data: GetQuestionDto) {
         return this.questionService.findOne(data);
     }

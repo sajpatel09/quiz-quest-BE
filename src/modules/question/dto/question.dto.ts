@@ -1,5 +1,16 @@
-import {IsArray, IsInt, IsMongoId, IsNotEmpty, IsOptional, IsString, Length, ValidateNested,} from 'class-validator';
-import {Type} from 'class-transformer';
+import {
+    IsArray,
+    IsInt,
+    IsMongoId,
+    IsNotEmpty,
+    IsNumber,
+    IsOptional,
+    IsString,
+    Length,
+    Min,
+    ValidateNested,
+} from 'class-validator';
+import {Transform, Type} from 'class-transformer';
 
 class OptionDto {
     @IsString()
@@ -57,4 +68,11 @@ export class GetAllQuestionDto {
     @Type(() => Number)
     @IsInt()
     page: number;
+}
+
+export class GetRandomQuestionDto {
+    @Transform(({value}) => parseInt(value))
+    @IsNumber()
+    @Min(1)
+    count: number;
 }

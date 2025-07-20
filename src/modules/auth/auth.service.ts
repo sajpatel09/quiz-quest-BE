@@ -115,4 +115,14 @@ export class AuthService {
     async getUserById(userId: string): Promise<UserDocument | null> {
         return this.userModel.findById(userId);
     }
+
+    async updateUserCoin(userId: string, coinDelta: number): Promise<number> {
+        const user = await this.userModel.findById(userId);
+        if (!user) {
+            throw new BadRequestException('User not found');
+        }
+        user.coin = (user.coin || 0) + coinDelta;
+        await user.save();
+        return user.coin;
+    }
 }
