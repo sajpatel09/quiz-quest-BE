@@ -68,4 +68,10 @@ export class QuestionService {
         if (!question) throw new NotFoundException('Question not found');
         return question;
     }
+
+    async getRandomQuestions(count: number) {
+        return this.questionModel.aggregate([
+            {$sample: {size: count}}
+        ]);
+    }
 }
