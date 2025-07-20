@@ -16,8 +16,8 @@ export class AuthController {
     const resData = await this.authService.signup(data);
     res.cookie('accessToken', resData.accessToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
     });
     return resData;
   }
@@ -30,8 +30,8 @@ export class AuthController {
     const resData = await this.authService.login(data);
     res.cookie('accessToken', resData.accessToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
     });
     return resData;
   }
