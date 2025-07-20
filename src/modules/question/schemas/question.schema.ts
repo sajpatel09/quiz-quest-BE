@@ -15,7 +15,7 @@ export class Question {
         isCorrect: { type: Boolean, default: false },
       },
     ],
-    required: true,
+    required: true
   })
   options: {
     text: string;
