@@ -1,52 +1,58 @@
-import {IsInt, IsMongoId, IsOptional, IsString, Length} from 'class-validator';
-import {Transform} from "class-transformer";
+import {
+  IsInt,
+  IsMongoId,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateQuizDto {
-    @IsString()
-    @Length(2, 100)
-    title: string;
+  @IsString()
+  @Length(2, 100)
+  title: string;
 
-    @IsMongoId()
-    category: string;
+  @IsMongoId()
+  category: string;
 
-    @IsInt()
-    entryFee: number;
+  @IsInt()
+  entryFee: number;
 
-    @IsInt()
-    prize: number;
+  @IsInt()
+  prize: number;
 }
 
 export class UpdateQuizDto extends CreateQuizDto {
-    @IsMongoId()
-    id: string;
+  @IsMongoId()
+  id: string;
 }
 
 export class GetQuizDto {
-    @IsMongoId()
-    id: string;
+  @IsMongoId()
+  id: string;
 }
 
 export class DeleteQuizDto {
-    @IsMongoId()
-    id: string;
+  @IsMongoId()
+  id: string;
 }
 
 export class GetAllQuizDto {
-    @IsOptional()
-    @IsString()
-    search: string;
+  @IsOptional()
+  @IsString()
+  search: string;
 
-    @IsOptional()
-    @IsMongoId()
-    category: string;
+  @IsOptional()
+  @IsMongoId()
+  category: string;
 
-    @IsOptional()
-    @Transform(({value}) => isNaN(value) ? undefined : parseInt(value))
-    @IsInt()
-    limit: number;
+  @IsOptional()
+  @Transform(({ value }) => (isNaN(value) ? undefined : parseInt(value)))
+  @IsInt()
+  limit: number;
 
-    @IsOptional()
-    @Transform(({value}) => isNaN(value) ? undefined : parseInt(value))
-    @IsInt()
-    page: number;
+  @IsOptional()
+  @Transform(({ value }) => (isNaN(value) ? undefined : parseInt(value)))
+  @IsInt()
+  page: number;
 }
