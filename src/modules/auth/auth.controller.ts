@@ -9,12 +9,15 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {
     }
 
+    @UseGuards(AuthGuard)
     @Post('signup')
     async signup(
+        @Req() request: Request,
         @Body() data: SignupDto,
         @Res({passthrough: true}) res: Response,
     ) {
-        const resData = await this.authService.signup(data);
+        const user = request['user'];
+        const resData = await this.authService.signup(data, user);
         res.cookie('accessToken', resData.accessToken, {
             httpOnly: true,
             secure: true,
@@ -61,5 +64,17 @@ export class AuthController {
             body.coin,
         );
         return {coin: updatedCoin};
+    }
+
+    @Post('guest-login')
+    async guestLogin(@Res({ passthrough: true }) res: Response) {
+        const resData = await this.authService.guestLogin();
+        res.cookie('accessToken', resData.accessToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            path: "/"
+        });
+        return resData;
     }
 }
