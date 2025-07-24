@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import {Model, Types} from 'mongoose';
 import { Question, QuestionDocument } from './schemas/question.schema';
 import {
   CreateQuestionDto,
@@ -24,29 +24,62 @@ export class QuestionService {
   async findAll(
     data: GetAllQuestionDto,
   ): Promise<{ questions: Question[]; total: number }> {
-    const { search, limit, page, quiz } = data;
+    const { search, limit, page, quiz, random } = data;
 
-    const filter: any = {};
+    const response = {
+        questions: [],
+        total: 0
+    }
+
+    const aggregationFilter: any = {};
     if (search) {
-      filter.$or = [{ question: { $regex: search, $options: 'i' } }];
+      aggregationFilter.question = { $regex: search, $options: 'i' };
     }
     if (quiz) {
-      filter.quiz = quiz;
+      aggregationFilter.quiz = quiz;
     }
 
-    let dataQuery = this.questionModel.find(filter).populate('quiz');
+    const pipeline: any[] = [{ $match: aggregationFilter }];
 
-    if (limit && page) {
-      const skip = (page - 1) * limit;
-      dataQuery = dataQuery.skip(skip).limit(limit);
+    if(random) {
+      const sampleSize = limit ? +limit :  await this.questionModel.countDocuments(aggregationFilter);
+      if (sampleSize > 0) {
+        pipeline.push({ $sample: { size: sampleSize } });
+      }
+      response.total = sampleSize > 0 ? sampleSize : 0
+    } else {
+      if (page && limit) {
+        const skip = (page - 1) * limit;
+        pipeline.push({ $skip: skip });
+        pipeline.push({ $limit: Number(limit) });
+      } else if (limit) {
+        pipeline.push({ $limit: Number(limit) });
+      }
     }
+
+    pipeline.push(
+        {
+          $lookup: {
+            from: 'quizzes',
+            localField: 'quiz',
+            foreignField: '_id',
+            as: 'quiz',
+          },
+        },
+        {
+          $unwind: {
+            path: '$quiz',
+            preserveNullAndEmptyArrays: true,
+          },
+        }
+    );
 
     const [questions, total] = await Promise.all([
-      dataQuery.exec(),
-      this.questionModel.countDocuments(filter),
+      this.questionModel.aggregate(pipeline),
+      this.questionModel.countDocuments(aggregationFilter),
     ]);
 
-    return { questions, total };
+    return { questions, total: response.total || total };
   }
 
   async findOne({ id }: GetQuestionDto): Promise<Question> {
