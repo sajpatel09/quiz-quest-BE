@@ -73,7 +73,7 @@ export class AuthController {
             httpOnly: true,
             secure: true,
             sameSite: "lax",
-            path: "/"
+            path: "/",
         });
         return resData;
     }
