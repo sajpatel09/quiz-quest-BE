@@ -23,5 +23,7 @@ jobs:
           npm install
           npm run build
 
-      - name: Restart Application
-        run: pm2 restart quiz-backend
+      - name: Install PM2 and Restart Application
+        run: |
+          npm install -g pm2
+          pm2 restart quiz-backend
