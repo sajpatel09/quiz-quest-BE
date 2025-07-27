@@ -23,7 +23,5 @@ jobs:
           npm install
           npm run build
 
-      - name: Install PM2 and Restart Application
-        run: |
-          npm install -g pm2
-          pm2 restart quiz-backend
+      - name: Restart Application
+        run: npx pm2 startOrRestart ecosystem.config.js
