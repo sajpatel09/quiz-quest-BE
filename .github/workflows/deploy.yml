@@ -17,7 +17,9 @@ jobs:
       # Step 2: Pull the latest code into your project folder
       - name: Pull Latest Changes
         working-directory: /var/www/html/quiz-quest-BE
-        run: git pull origin main
+        run:  |
+          git fetch --all
+          git reset --hard origin/main
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
