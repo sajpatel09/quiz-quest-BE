@@ -2,8 +2,9 @@ module.exports = {
   apps: [
     {
       name: 'quiz-backend',
-      script: 'npm',
-      args: 'run start:prod', // This is the standard command to run a production NestJS build
+      script: 'dist/main.js', // Run the compiled JS file directly
+      // This line tells Node.js to load the .env file before starting
+      node_args: '-r dotenv/config',
     },
   ],
 };
