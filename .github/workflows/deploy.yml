@@ -26,11 +26,16 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Dependencies & Build
+      - name: Install Dependencies Reliably & Verify
         working-directory: /var/www/html/quiz-quest-BE
         run: |
-          npm install
-          npm run build
+          npm ci
+          # This next line is for debugging, to prove the folder exists
+          ls -l node_modules/dotenv
+
+      - name: Build Application
+        working-directory: /var/www/html/quiz-quest-BE
+        run: npm run build
 
       - name: Restart Application
         run: npx pm2 startOrRestart ecosystem.config.js
